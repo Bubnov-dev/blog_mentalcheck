@@ -41,7 +41,7 @@ const router = createRouter({
       props: true,
     },
     {
-      path: "/tests",
+      path: "/mtests",
       name: "tests",
       component: testPage,
     },

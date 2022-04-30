@@ -4,18 +4,14 @@ import TheWelcome from "@/components/TheWelcome.vue";
 
 <template>
   <div class="template-wrap">
-    <div v-if="showPreloader > 0" class="preloader">
-      <img class="aside-logo__img" src="/src/assets/img/logo.png" />
-    </div>
+    <div v-if="showPreloader > 0" class="preloader">Лого</div>
     <div class="page-wrapper__block">
-      <p class="page-wrapper__block-title">Тесты</p>
       <div class="card-grid test-grid">
         <div class="card-grid__wrapper card-grid__wrapper_small">
-          <RouterLink
-            :to="'/test/' + test.slug"
+          <div
+            class="card-grid__item card-item"
             v-for="test in tests"
             :key="test.id"
-            class="card-grid__item card-item"
           >
             <div class="card-item__wrapper card-item__wrapper_row">
               <div class="card-item__header card-item__header_size-small">
@@ -26,51 +22,43 @@ import TheWelcome from "@/components/TheWelcome.vue";
                 <p class="card-item__text">
                   {{ test.description }}
                 </p>
+                <RouterLink
+                  :to="'/test/' + test.slug"
+                  class="card-item__btn btn btn-blue"
+                  href="#"
+                  >начать</RouterLink
+                >
               </div>
             </div>
-          </RouterLink>
-        </div>
-        <div class="card-grid__footer">
-          <RouterLink class="card-grid__link" to="/tests">
-            Все тесты
-          </RouterLink>
+          </div>
         </div>
       </div>
     </div>
+
     <div class="page-wrapper__block">
       <section class="banner page-wrapper__banner">
-        <div class="banner__wrapper banner__wrapper-descktop">
+        <div class="banner__wrapper">
           <div class="banner__img"><img src="../assets/img/banner.png" /></div>
           <div class="banner__content">
             <h2 class="banner__title">
-              Задай волнующий тебя вопрос дипломированному психологу
+              <span>Задай волнующий тебя вопрос</span> дипломированному
+              психологу
             </h2>
           </div>
           <div class="banner__footer">
-            <a class="banner__btn btn" href="#"
-              ><img class="banner__btn-img" src="../assets/img/arrow.png"
-            /></a>
-          </div>
-        </div>
-        <div class="banner__wrapper banner__wrapper-mobile">
-          <div class="banner__img">
-            <img class="banner__img-item" src="../assets/img/comment.png" />
-          </div>
-          <div class="banner__desc">
-            <p class="banner__text">Задай вопрос психологу</p>
+            <a class="banner__btn btn" href="#">Написать</a>
           </div>
         </div>
       </section>
     </div>
     <div class="page-wrapper__block">
-      <p class="page-wrapper__block-title">Лента</p>
       <div class="card-grid material-grid">
         <div class="card-grid__wrapper">
           <RouterLink
             :to="'/material/' + material.slug"
+            class="card-grid__item card-item"
             v-for="material in materials"
             :key="material.id"
-            class="card-grid__item card-item"
           >
             <div class="card-item__wrapper">
               <div class="card-item__header">
@@ -79,25 +67,6 @@ import TheWelcome from "@/components/TheWelcome.vue";
                   :src="material.preview"
                 />
                 <div class="card-item__header-footer">
-                  <div class="card-item__category">
-                    <img
-                      v-if="material.type == 'article'"
-                      class="card-item__category-icon"
-                      src="../assets/img/tag-1.png"
-                    />
-
-                    <img
-                      v-if="material.type == 'video'"
-                      class="card-item__category-icon"
-                      src="../assets/img/tag-2.png"
-                    />
-
-                    <img
-                      v-if="material.type == 'stream'"
-                      class="card-item__category-icon"
-                      src="../assets/img/tag-3.png"
-                    />
-                  </div>
                   <div class="card-item__tag">
                     <div
                       class="card-item__tag-item"
@@ -107,20 +76,21 @@ import TheWelcome from "@/components/TheWelcome.vue";
                       <p class="card-item__tag-text">{{ tag }}</p>
                     </div>
                   </div>
-                  <div class="card-item__date">
-                    <p class="card-item__date-text">
-                      {{ material.created_at }}
-                    </p>
-                  </div>
                 </div>
               </div>
               <div class="card-item__content">
-                <p class="card-item__title">
-                  {{ material.title }}
-                </p>
+                <p class="card-item__title">{{ material.title }}</p>
+                <p class="card-item__text">{{ material.description }}</p>
               </div>
             </div>
           </RouterLink>
+        </div>
+
+        <div
+          v-if="page < lastPage"
+          class="card-grid__footer card-grid__footer_margin-small"
+        >
+          <span class="card-grid__link" @click="nextPage()">Загрузить еще</span>
         </div>
       </div>
     </div>
@@ -131,38 +101,32 @@ import TheWelcome from "@/components/TheWelcome.vue";
 import axios from "axios";
 
 export default {
-  created() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  unmounted() {
-    window.removeEventListener("scroll", this.handleScroll);
-  },
+  inject: ["host"],
+
   mounted() {
-    axios
-      .get("https://mentalhub.ffox.site/api/blog/testsShort")
-      .then((response) => {
-        this.tests = response["data"];
-        this.showPreloader--;
+    axios.get(this.host + "/api/blog/testsShort").then((response) => {
+      this.tests = response["data"];
+      this.showPreloader--;
+    });
+
+    axios.get(this.host + "/api/blog/newest").then((response) => {
+      this.materials = response["data"]["data"];
+      this.lastPage = response["data"]["last_page"];
+
+      this.materials.forEach((element) => {
+        var date = new Date(element.created_at);
+
+        var options = {
+          month: "numeric",
+          day: "numeric",
+
+          timezone: "UTC",
+        };
+
+        element.created_at = date.toLocaleString("ru", options);
       });
-
-    axios
-      .get("https://mentalhub.ffox.site/api/blog/newest")
-      .then((response) => {
-        this.materials = response["data"]["data"];
-        this.materials.forEach((element) => {
-          var date = new Date(element.created_at);
-
-          var options = {
-            month: "numeric",
-            day: "numeric",
-
-            timezone: "UTC",
-          };
-
-          element.created_at = date.toLocaleString("ru", options);
-        });
-        this.showPreloader--;
-      });
+      this.showPreloader--;
+    });
   },
 
   methods: {
@@ -170,13 +134,10 @@ export default {
       let bottomOfWindow =
         document.documentElement.scrollTop + window.innerHeight >=
         -document.documentElement.offsetHeight;
-      if (bottomOfWindow) {
+      if (bottomOfWindow && !this.loading) {
+        this.loading = true;
         axios
-          .get(
-            "https://mentalhub.ffox.site/api/blog/newest" +
-              "?page=" +
-              +(++this.page)
-          )
+          .get(this.host + "/api/blog/newest" + "?page=" + +(++this.page))
           .then((response) => {
             let _materials = response["data"]["data"];
             _materials.forEach((element) => {
@@ -193,8 +154,31 @@ export default {
             });
 
             this.materials = [...this.materials, ..._materials];
+            this.loading = false;
           });
       }
+    },
+    nextPage() {
+      axios
+        .get(this.host + "/api/blog/newest" + "?page=" + ++this.page)
+        .then((response) => {
+          let _materials = response["data"]["data"];
+          _materials.forEach((element) => {
+            var date = new Date(element.created_at);
+
+            var options = {
+              month: "numeric",
+              day: "numeric",
+
+              timezone: "UTC",
+            };
+
+            element.created_at = date.toLocaleString("ru", options);
+          });
+
+          this.materials = [...this.materials, ..._materials];
+          this.loading = false;
+        });
     },
   },
   data() {
@@ -202,7 +186,9 @@ export default {
       materials: [],
       tests: [],
       page: 1,
+      lastPage: 1,
       showPreloader: 2, //0 = don't show
+      loading: false,
     };
   },
 };

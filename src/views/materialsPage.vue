@@ -4,9 +4,10 @@
       <div class="card-grid__wrapper">
         <RouterLink
           :to="'/material/' + material.slug"
-          v-for="material in materials"
+          v-for="(material, idx) in materials"
           :key="material.id"
           class="card-grid__item card-item"
+          :class="{ 'card-item_big': idx % 9 == 0 }"
         >
           <div class="card-item__wrapper">
             <div class="card-item__header">
@@ -15,25 +16,6 @@
                 :src="material.preview"
               />
               <div class="card-item__header-footer">
-                <div class="card-item__category">
-                  <img
-                    v-if="material.type == 'article'"
-                    class="card-item__category-icon"
-                    src="../assets/img/tag-1.png"
-                  />
-
-                  <img
-                    v-if="material.type == 'video'"
-                    class="card-item__category-icon"
-                    src="../assets/img/tag-2.png"
-                  />
-
-                  <img
-                    v-if="material.type == 'stream'"
-                    class="card-item__category-icon"
-                    src="../assets/img/tag-3.png"
-                  />
-                </div>
                 <div class="card-item__tag">
                   <div
                     class="card-item__tag-item"
@@ -43,17 +25,11 @@
                     <p class="card-item__tag-text">{{ tag }}</p>
                   </div>
                 </div>
-                <div class="card-item__date">
-                  <p class="card-item__date-text">
-                    {{ material.created_at }}
-                  </p>
-                </div>
               </div>
             </div>
             <div class="card-item__content">
-              <p class="card-item__title">
-                {{ material.title }}
-              </p>
+              <p class="card-item__title">{{ material.title }}</p>
+              <p class="card-item__text">{{ material.description }}</p>
             </div>
           </div>
         </RouterLink>
@@ -61,10 +37,10 @@
     </div>
     <div
       v-if="page < lastPage"
-      class="card-grid__footer card-grid__footer_position-center"
+      class="card-grid__footer card-grid__footer_margin-big card-grid__footer_position-center"
     >
-      <span class="card-grid__btn btn btn-light-blue" @click="nextPage"
-        >показать еще</span
+      <span class="card-grid__link card-grid__link-big" @click="nextPage"
+        >Загрузить еще</span
       >
     </div>
   </div>
@@ -74,6 +50,7 @@
 import axios from "axios";
 
 export default {
+  inject: ["host"],
   created() {
     window.addEventListener("scroll", this.handleScroll);
   },
@@ -81,7 +58,7 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   mounted() {
-    console.log("https://mentalhub.ffox.site/api/blog/" + this.type);
+    console.log(this.host + "/api/blog/" + this.type);
     this.init();
   },
 
@@ -138,7 +115,8 @@ export default {
       let tagParam = tagsParams != "" ? "&tags=" + tagsParams : "";
       axios
         .get(
-          "https://mentalhub.ffox.site/api/blog/" +
+          this.host +
+            "/api/blog/" +
             this.r_type +
             "?page=" +
             +this.page +
@@ -167,7 +145,8 @@ export default {
       let tagParam = tagsParams != "" ? "&tags=" + tagsParams : "";
       axios
         .get(
-          "https://mentalhub.ffox.site/api/blog/" +
+          this.host +
+            "/api/blog/" +
             this.type +
             "?page=" +
             +(++this.page) +

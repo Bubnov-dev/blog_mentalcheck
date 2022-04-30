@@ -10,19 +10,29 @@
                 :src="material.head_content"
               />
             </div>
+          </div>
+          <div class="single-article__content">
             <div class="single-article__info">
+              <div class="single-article__info-block">
+                <div class="card-item__tag">
+                  <div
+                    class="card-item__tag-item"
+                    v-for="tag in material.tags"
+                    :key="tag"
+                  >
+                    <p class="card-item__tag-text">{{ tag }}</p>
+                  </div>
+                </div>
+              </div>
               <div class="single-article__info-block">
                 <time class="single-article__info-text">{{
                   material.created_at
                 }}</time>
               </div>
-              <div class="single-article__info-block">
-                <p class="single-article__info-text">{{ material.author }}</p>
-              </div>
             </div>
-          </div>
-          <div class="single-article__content">
-            <h2 class="single-article__title">{{ material.title }}</h2>
+            <p class="single-article__title">
+              {{ material.title }}
+            </p>
             <div class="single-article__desc" v-html="material.content"></div>
           </div>
         </div>
@@ -30,66 +40,48 @@
     </div>
     <div class="page-wrapper__block">
       <section class="section">
-        <div class="section__header">
-          <h2 class="section__title">Читайте также:</h2>
-        </div>
-        <div class="section__content">
-          <div class="card-grid__wrapper">
-            <RouterLink
-              :to="'/material/' + material.slug"
-              v-for="material in materials"
-              :key="material.id"
-              class="card-grid__item card-item"
-            >
-              <div class="card-item__wrapper">
-                <div class="card-item__header">
-                  <img
-                    class="card-item__img card-item__img_size-full"
-                    :src="material.preview"
-                  />
-                  <div class="card-item__header-footer">
-                    <div class="card-item__category">
+        <div class="container container-small">
+          <div class="section__header">
+            <h2 class="section__title">Читайте также:</h2>
+          </div>
+          <div class="section__content">
+            <div class="card-grid material-grid">
+              <div class="card-grid__wrapper card-grid__wrapper_small">
+                <RouterLink
+                  :to="'/material/' + material.slug"
+                  class="card-grid__item card-item"
+                  v-for="material in materials"
+                  :key="material.id"
+                >
+                  <div class="card-item__wrapper">
+                    <div class="card-item__header">
                       <img
-                        v-if="material.type == 'article'"
-                        class="card-item__category-icon"
-                        src="../assets/img/tag-1.png"
+                        class="card-item__img card-item__img_size-full"
+                        :src="material.preview"
                       />
-
-                      <img
-                        v-if="material.type == 'video'"
-                        class="card-item__category-icon"
-                        src="../assets/img/tag-2.png"
-                      />
-
-                      <img
-                        v-if="material.type == 'stream'"
-                        class="card-item__category-icon"
-                        src="../assets/img/tag-3.png"
-                      />
-                    </div>
-                    <div class="card-item__tag">
-                      <div
-                        class="card-item__tag-item"
-                        v-for="tag in material.tags"
-                        :key="tag"
-                      >
-                        <p class="card-item__tag-text">{{ tag }}</p>
+                      <div class="card-item__header-footer">
+                        <div class="card-item__tag">
+                          <div
+                            class="card-item__tag-item"
+                            v-for="tag in material.tags"
+                            :key="tag"
+                          >
+                            <p class="card-item__tag-text">{{ tag }}</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div class="card-item__date">
-                      <p class="card-item__date-text">
-                        {{ material.created_at }}
+                    <div class="card-item__content">
+                      <p class="card-item__title">{{ material.title }}</p>
+                      <p class="card-item__text">
+                        Описание статьи максимум в три <br />
+                        строки
                       </p>
                     </div>
                   </div>
-                </div>
-                <div class="card-item__content">
-                  <p class="card-item__title">
-                    {{ material.title }}
-                  </p>
-                </div>
+                </RouterLink>
               </div>
-            </RouterLink>
+            </div>
           </div>
         </div>
       </section>
@@ -101,6 +93,7 @@
 import axios from "axios";
 
 export default {
+  inject: ["host"],
   mounted() {
     this.init();
   },
@@ -119,7 +112,7 @@ export default {
   methods: {
     init() {
       axios
-        .get("https://mentalhub.ffox.site/api/blog/material/" + this.slug)
+        .get(this.host + "/api/blog/material/" + this.slug)
         .then((response) => {
           this.material = response.data;
           var date = new Date(this.material.created_at);
@@ -127,18 +120,17 @@ export default {
           var options = {
             month: "numeric",
             day: "numeric",
+            year: "2-digit",
 
             timezone: "UTC",
           };
-
+          console.log(date);
           this.material.created_at = date.toLocaleString("ru", options);
 
           axios
-            .get(
-              "https://mentalhub.ffox.site/api/blog/" + this.material.type + "s"
-            )
+            .get(this.host + "/api/blog/" + this.material.type + "s")
             .then((response) => {
-              this.materials = response["data"]["data"].slice(0, 4);
+              this.materials = response["data"]["data"].slice(0, 3);
               this.materials.forEach((element) => {
                 var date = new Date(element.created_at);
 
@@ -158,8 +150,7 @@ export default {
 
   watch: {
     slug(to, from) {
-        this.init();
-
+      this.init();
     },
   },
 };

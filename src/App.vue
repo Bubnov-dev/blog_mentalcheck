@@ -10,135 +10,123 @@ import iconConsultation from "./components/icons/iconConsultation.vue";
 
 <template>
   <body>
-    <div class="page-wrapper">
-      <div class="page-wrapper__aside">
-        <aside class="aside">
-          <div class="aside__wrapper">
-            <div class="aside__block aside__header">
-              <div class="aside__burger">
-                <div class="burger">
-                  <div class="burger__item"></div>
-                  <div class="burger__item"></div>
-                  <div class="burger__item"></div>
-                </div>
-              </div>
-              <RouterLink class="aside-logo" to="/"
-                ><img class="aside-logo__img" src="./assets/img/logo.png"
-              /></RouterLink>
-            </div>
-            <div class="aside__wrapper-block">
-              <div class="aside__block aside__content">
-                <nav class="aside-nav main-nav">
-                  <ul class="aside-nav__list page-list">
-                    <li class="aside-nav__item page-list__item">
-                      <RouterLink
-                        class="aside-nav__link page-list__link"
-                        to="/"
-                      >
-                        <span class="aside-nav__link-icon page-list__link-icon">
-                          <iconHome />
-                        </span>
-                        <span class="aside-nav__link-text page-list__link-text"
-                          >Главная</span
-                        >
-                      </RouterLink>
-                    </li>
-                    <li class="aside-nav__item page-list__item">
-                      <RouterLink
-                        class="aside-nav__link page-list__link"
-                        to="/materials/articles"
-                      >
-                        <span class="aside-nav__link-icon page-list__link-icon">
-                          <iconArticles />
-                        </span>
-                        <span class="aside-nav__link-text page-list__link-text"
-                          >Рубрики</span
-                        >
-                      </RouterLink>
-                      <ul class="aside-nav__list">
-                        <li
-                          class="aside-nav__item"
-                          v-for="tag in tags"
-                          :key="tag.name"
-                        >
-                          <RouterLink
-                            class="aside-nav__link"
-                            :to="'/materials/articles?tags=' + tag.id"
-                          >
-                            <span class="aside-nav__link-text">{{
-                              tag.name
-                            }}</span>
-                          </RouterLink>
-                        </li>
-                      </ul>
-                    </li>
-                    <li class="aside-nav__item page-list__item">
-                      <RouterLink
-                        class="aside-nav__link page-list__link"
-                        to="/materials/videos"
-                      >
-                        <span class="aside-nav__link-icon page-list__link-icon">
-                          <iconVideo />
-                        </span>
-
-                        <span class="aside-nav__link-text page-list__link-text"
-                          >Видео</span
-                        >
-                      </RouterLink>
-                    </li>
-                    <li class="aside-nav__item page-list__item">
-                      <RouterLink
-                        class="aside-nav__link page-list__link"
-                        to="/materials/streams"
-                      >
-                        <span class="aside-nav__link-icon page-list__link-icon">
-                          <iconStream />
-                        </span>
-
-                        <span class="aside-nav__link-text page-list__link-text">
-                          Прямые трансляции
-                        </span>
-                      </RouterLink>
-                    </li>
-                    <li class="aside-nav__item page-list__item">
-                      <RouterLink
-                        class="aside-nav__link page-list__link"
-                        to="/tests"
-                      >
-                        <span class="aside-nav__link-icon page-list__link-icon">
-                          <iconAnalyse />
-                        </span>
-                        <span class="aside-nav__link-text page-list__link-text">
-                          Психологический анализ</span
-                        >
-                      </RouterLink>
-                    </li>
-
-                    <li class="aside-nav__item page-list__item">
-                      <RouterLink
-                        class="aside-nav__link page-list__link"
-                        to="/consultation"
-                      >
-                        <span class="aside-nav__link-icon page-list__link-icon">
-                          <iconConsultation />
-                        </span>
-                        <span class="aside-nav__link-text page-list__link-text"
-                          >Консультация</span
-                        >
-                      </RouterLink>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-              <div class="aside__block aside__footer">
-                <a class="aside__btn btn btn-light-blue" href="../cabinet"
-                  >личный кабинет</a
-                >
-              </div>
+    <header class="header">
+      <div class="container">
+        <div class="header__wrapper">
+          <div class="header__block">
+            <div class="logo">
+              <p class="logo__text">Логотип</p>
             </div>
           </div>
-        </aside>
+          <div class="header__block header__nav">
+            <nav class="header-nav">
+              <ul class="header-nav__list header-list">
+                <li class="header-list__item">
+                  <RouterLink class="header-list__link" to="/"
+                    >Главная</RouterLink
+                  >
+                </li>
+                <li class="header-list__item">
+                  <RouterLink class="header-list__link" to="/mtests"
+                    >Тесты</RouterLink
+                  >
+                </li>
+                <li class="header-list__item">
+                  <RouterLink
+                    to="/materials/all"
+                    class="header-list__link"
+                    href="#"
+                    >Материалы</RouterLink
+                  >
+                </li>
+                <li class="header-list__item">
+                  <RouterLink
+                    to="/consultation"
+                    class="header-list__link"
+                    href="#"
+                    >Консультация</RouterLink
+                  >
+                </li>
+                <li class="header-list__item">
+                  <a class="header-list__link" href="#">Медиа</a>
+                  <ul class="header-nav__list header-list">
+                    <li class="header-list__item">
+                      <a class="header-list__link" href="#">Медиа</a>
+                    </li>
+                    <li class="header-list__item">
+                      <a class="header-list__link" href="#">Медиа</a>
+                    </li>
+                    <li class="header-list__item">
+                      <a class="header-list__link" href="#">Медиа</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="header__burger header__block">
+            <div class="burger">
+              <div class="burger__item"></div>
+              <div class="burger__item"></div>
+              <div class="burger__item"></div>
+            </div>
+          </div>
+        </div>
       </div>
+    </header>
+    <div class="aside">
+      <div class="aside__wrapper">
+        <div class="aside__nav">
+          <nav class="aside-nav header-nav">
+            <ul class="aside-nav__list aside-list header-nav__list">
+              <li class="aside-list__item header-list__item">
+                <RouterLink class="aside-list__link header-list__link" to="/"
+                  >Главная</RouterLink
+                >
+              </li>
+              <li class="aside-list__item header-list__item">
+                <RouterLink
+                  to="/mtests"
+                  class="aside-list__link header-list__link"
+                  >Тесты</RouterLink
+                >
+              </li>
+              <li class="aside-list__item header-list__item">
+                <RouterLink
+                  to="/consultation"
+                  class="aside-list__link header-list__link"
+                  >Консультация</RouterLink
+                >
+              </li>
+              <li class="aside-list__item header-list__item">
+                <a class="aside-list__link header-list__link" href="#">Медиа</a>
+                <ul class="aside-nav__list aside-list header-nav__list">
+                  <li class="aside-list__item header-list__item">
+                    <a class="aside-list__link header-list__link" href="#"
+                      >Медиа</a
+                    >
+                  </li>
+                  <li class="aside-list__item header-list__item">
+                    <a class="aside-list__link header-list__link" href="#"
+                      >Медиа</a
+                    >
+                  </li>
+                  <li class="aside-list__item header-list__item">
+                    <a class="aside-list__link header-list__link" href="#"
+                      >Медиа</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="aside__footer">
+          <a class="btn aside__btn" href="../cabinet2">Личный кабинет</a>
+        </div>
+      </div>
+    </div>
+    <div class="page-wrapper">
       <div class="page-wrapper__content">
         <RouterView />
       </div>
@@ -150,8 +138,14 @@ import axios from "axios";
 import "./assets/js/common.js";
 
 export default {
+  provide() {
+    return {
+      host: this.host,
+    };
+  },
+  inject: ["host"],
   mounted: function () {
-    axios.get("https://mentalhub.ffox.site/api/blog/tags").then((response) => {
+    axios.get(this.host + "/api/blog/tags").then((response) => {
       console.log(response);
       this.tags = response["data"];
     });
@@ -160,11 +154,12 @@ export default {
   data() {
     return {
       tags: [],
+      host: "http://app.mentalcheck.ru",
     };
   },
 };
 </script>
 <style>
 /* @import '@/assets/base.css'; */
-@import "@/assets/main.css";
+@import "@/assets/css/main.css";
 </style>
